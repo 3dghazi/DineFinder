@@ -33,6 +33,23 @@ DineFinder is a web application that helps users discover and explore restaurant
 
 ## Running the Application 
 
+### Option 1: Using Docker Compose (Recommended)
+
+1. Create the required `.env` files as described in the Environment Setup section above.
+
+2. From the root directory of the project, run:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. The application will be available at:
+   - Frontend: [http://localhost:3001](http://localhost:3001)
+   - Backend API: [http://localhost:3000](http://localhost:3000)
+
+This will build the Docker images, install all dependencies, and start both services with proper networking between them.
+
+### Option 2: Local Development
+
 1. Open a terminal and move to the backend folder:
    ```bash
    cd backend

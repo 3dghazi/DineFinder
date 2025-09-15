@@ -5,6 +5,12 @@ services:
     container_name: frontend_c
     ports:
       - '3001:3001'
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_BASE_URL=http://backend:3000
+    env_file:
+      - ./frontend/.env
   backend:
     build: ./backend
     container_name: backend_c
@@ -12,3 +18,5 @@ services:
       - '3000:3000'
     stdin_open: true
     tty: true
+    env_file:
+      - ./backend/.env
