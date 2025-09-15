@@ -2,13 +2,12 @@ import React from "react";
 import { Box, Typography, Rating } from "@mui/material";
 import { Restaurant } from "../types/types";
 import defaultRestaurantImage from "../assets/DefaultRestaurant.jpg";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
   restaurant: Restaurant;
 }
 
-function RestaurantCard({ restaurant }: Props) {
+const RestaurantCard: React.FC<Props> = ({ restaurant }) => {
   const getImageUrl = () => {
     if (restaurant.photos && restaurant.photos[0]) {
       return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${restaurant.photos[0].photo_reference}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
@@ -16,9 +15,9 @@ function RestaurantCard({ restaurant }: Props) {
     return defaultRestaurantImage;
   };
 
-  const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/restaurant/${restaurant.place_id}`);
+    const url = `/restaurant/${restaurant.place_id}`;
+    window.open(url, '_blank');
   };
 
   return (

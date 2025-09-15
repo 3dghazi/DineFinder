@@ -29,6 +29,14 @@ test('filter sidebar controls are visible and interactive', async ({ page }) => 
 
 test('restaurant detail page displays info and navigation', async ({ page }) => {
   await page.goto('http://localhost:3001');
+  await page.evaluate(() => {
+    window.open = (url) => {
+      if (typeof url === 'string') {
+        window.location.href = url;
+      }
+      return null;
+    };
+  });
   const firstCard = page.locator('[data-testid="restaurant-card-title"]').first();
   const title = await firstCard.textContent();
   await firstCard.click();
