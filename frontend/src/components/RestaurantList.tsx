@@ -113,7 +113,7 @@ const RestaurantList: React.FC<RestaurantListProps> = ({
           alignItems="center"
           sx={{ height: "200px" }}
         >
-          <Typography variant="body1" color="text.secondary">
+          <Typography data-testid="no-results" variant="body1" color="text.secondary">
             No restaurants found. Try adjusting your filters.
           </Typography>
         </Box>

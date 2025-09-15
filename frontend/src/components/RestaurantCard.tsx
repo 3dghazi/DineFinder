@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Rating } from "@mui/material";
 import { Restaurant } from "../types/types";
 import defaultRestaurantImage from "../assets/DefaultRestaurant.jpg";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   restaurant: Restaurant;
@@ -15,8 +16,9 @@ function RestaurantCard({ restaurant }: Props) {
     return defaultRestaurantImage;
   };
 
+  const navigate = useNavigate();
   const handleClick = () => {
-    window.open(`/restaurant/${restaurant.place_id}`, "_blank");
+    navigate(`/restaurant/${restaurant.place_id}`);
   };
 
   return (
@@ -75,6 +77,7 @@ function RestaurantCard({ restaurant }: Props) {
               fontWeight: 600,
               mb: 1,
             }}
+            data-testid="restaurant-card-title"
           >
             {restaurant.name}
           </Typography>

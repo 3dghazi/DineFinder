@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Box } from "@mui/material";
 import FilterSidebar from "./FilterSidebar";
+import useMediaQuery from '@mui/material/useMediaQuery';
 import RestaurantList from "./RestaurantList";
 import RestaurantsMap from "./RestaurantsMap";
 import { fetchRestaurants } from "../services/api";
@@ -8,6 +9,8 @@ import { Restaurant, FilterOptions } from "../types/types";
 import toast from "react-hot-toast";
 
 function Home() {
+  const isMobile = useMediaQuery('(max-width:600px)');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [nextPageToken, setNextPageToken] = useState<string | undefined>(
@@ -94,29 +97,38 @@ function Home() {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
-      <FilterSidebar
-        filters={filters}
-        onFilterChange={handleFilterChange}
-        showNearby={showNearby}
-        setShowNearby={setShowNearby}
-      />
-
-      <RestaurantList
-        restaurants={restaurants}
-        nextPageToken={nextPageToken}
-        onLoadMore={loadMore}
-        loading={loading}
-        onRestaurantHover={setHoveredId}
-      />
-
-      <Box sx={{ width: "40%", minHeight: "100vh" }}>
-        <RestaurantsMap
-          restaurants={restaurants}
-          hoveredId={hoveredId}
-          height="100%"
+    <Box sx={{ display: isMobile ? 'block' : 'flex', height: '100vh' }}>
+      <Box sx={isMobile ? { width: '100%' } : {}}>
+        <FilterSidebar
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          showNearby={showNearby}
+          setShowNearby={setShowNearby}
+          isOpen={sidebarOpen}
+          setIsOpen={setSidebarOpen}
+          isMobile={isMobile}
         />
       </Box>
+
+      <Box sx={isMobile ? { width: '100%' } : {}}>
+        <RestaurantList
+          restaurants={restaurants}
+          nextPageToken={nextPageToken}
+          onLoadMore={loadMore}
+          loading={loading}
+          onRestaurantHover={setHoveredId}
+        />
+      </Box>
+
+      {!isMobile && (
+        <Box sx={{ width: '40%', minHeight: '100vh' }}>
+          <RestaurantsMap
+            restaurants={restaurants}
+            hoveredId={hoveredId}
+            height="100%"
+          />
+        </Box>
+      )}
     </Box>
   );
 }

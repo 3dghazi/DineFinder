@@ -112,7 +112,7 @@ function RestaurantDetails({ restaurantId }: Props) {
   return (
     <Box sx={{ maxWidth: 800, mx: "auto", p: 3 }}>
       <Box mb={3}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography data-testid="restaurant-name" variant="h4" component="h1" gutterBottom>
           {details.name}
         </Typography>
         <Box display="flex" alignItems="center" gap={2} mb={2}>

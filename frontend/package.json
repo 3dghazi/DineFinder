@@ -51,6 +51,8 @@
     ]
   },
   "devDependencies": {
-    "@types/google.maps": "^3.58.1"
+    "@playwright/test": "^1.55.0",
+    "@types/google.maps": "^3.58.1",
+    "playwright": "^1.55.0"
   }
 }

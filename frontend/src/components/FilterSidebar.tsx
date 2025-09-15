@@ -22,6 +22,8 @@ import {
 import {
   KeyboardArrowLeft as ArrowLeftIcon,
   KeyboardArrowRight as ArrowRightIcon,
+  ArrowDropUp as ArrowUpIcon,
+  ArrowDropDown as ArrowDownIcon,
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import { FilterOptions } from "../types/types";
@@ -31,6 +33,9 @@ interface FilterSidebarProps {
   onFilterChange: (key: keyof FilterOptions, value: any) => void;
   showNearby: boolean;
   setShowNearby: (value: boolean) => void;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isMobile?: boolean;
 }
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({
@@ -38,8 +43,20 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onFilterChange,
   showNearby,
   setShowNearby,
+  isOpen,
+  setIsOpen,
+  isMobile = false,
 }) => {
-  const [isOpen, setIsOpen] = React.useState(true);
+  const defaultFilters: FilterOptions = {
+    keyword: "",
+    minprice: "",
+    maxprice: "",
+    opennow: false,
+    rankby: "prominence",
+    type: "restaurant",
+    lat: undefined,
+    lng: undefined,
+  };
   const [priceFilterEnabled, setPriceFilterEnabled] = React.useState(false);
   const priceLabels = ["$", "$$", "$$$", "$$$$"];
 
@@ -72,14 +89,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   };
 
   const handleResetFilters = () => {
-    onFilterChange("keyword", "");
-    onFilterChange("minprice", "");
-    onFilterChange("maxprice", "");
-    onFilterChange("opennow", false);
-    onFilterChange("rankby", "prominence");
-    onFilterChange("type", "restaurant");
-    onFilterChange("lat", undefined);
-    onFilterChange("lng", undefined);
+    Object.entries(defaultFilters).forEach(([key, value]) => {
+      onFilterChange(key as keyof FilterOptions, value);
+    });
     setShowNearby(false);
     setPriceFilterEnabled(false);
   };
@@ -88,23 +100,43 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     <Box sx={{ position: "relative" }}>
       <IconButton
         onClick={() => setIsOpen(!isOpen)}
-        sx={{
-          position: "absolute",
-          top: 10,
-          left: isOpen ? 270 : 10,
-          zIndex: 1000,
-          backgroundColor: "white",
-          boxShadow: 2,
-          "&:hover": {
-            backgroundColor: "#f5f5f5",
-          },
-          transition: "left 0.3s ease",
-        }}
+        sx={
+          isMobile
+            ? {
+                position: "absolute",
+                top: isOpen ? 10 : 10,
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 1000,
+                backgroundColor: "white",
+                boxShadow: 2,
+                transition: "top 0.3s ease",
+              }
+            : {
+                position: "absolute",
+                top: 10,
+                left: isOpen ? 270 : 10,
+                zIndex: 1000,
+                backgroundColor: "white",
+                boxShadow: 2,
+                transition: "left 0.3s ease",
+              }
+        }
       >
-        {isOpen ? <ArrowLeftIcon /> : <ArrowRightIcon />}
+        {isMobile ? (
+          isOpen ? (
+            <ArrowUpIcon />
+          ) : (
+            <ArrowDownIcon />
+          )
+        ) : isOpen ? (
+          <ArrowLeftIcon />
+        ) : (
+          <ArrowRightIcon />
+        )}
       </IconButton>
 
-      <Collapse in={isOpen} orientation="horizontal">
+      <Collapse in={isOpen} orientation={isMobile ? "vertical" : "horizontal"}>
         <Paper
           elevation={2}
           sx={{
@@ -133,6 +165,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             fullWidth
             label="Search restaurants"
             placeholder="Enter keyword..."
+            data-testid="search-input"
             value={filters.keyword || ""}
             onChange={(e) => onFilterChange("keyword", e.target.value)}
             sx={{ mb: 3 }}
